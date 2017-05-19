@@ -22,25 +22,21 @@ router.get('/validate',function (req,res,next) {
     oriArray[2] = token;
     oriArray.sort();
     var original = oriArray.join('');
-    console.log(original);
 
     // 进行SH-1加密
     var hashSum = crypto.createHash('sha1');
     hashSum.update(original);
     var scyptoString = hashSum.digest('hex');
 
-    console.log("Original str : " + original);
-    console.log("Signature : " + signature);
-
     // 验证签名
     if(signature == scyptoString){
         // 验证成功
         res.end(echostr);
-        console.log("Confirm and send echo back");
+        console.log("confirm and send echo back");
     } else {
         // 验证失败
         res.end("false");
-        console.log("Failed!");
+        console.log("failed!");
     }
 });
 
