@@ -25,7 +25,13 @@ app.use(function (req,res,next) {
     if(req.cookies.get('client_credential')){
         console.log('从cookies中获取client_credential');
         try{
-            req.client_credential = JSON.parse(req.cookies.get('client_credential'));
+            var json = JSON.parse(req.cookies.get('client_credential'));
+            var current = new Date();
+            if(json.expires_date.getTime()>current.getTime()) {
+                req.client_credential = JSON.parse(req.cookies.get('client_credential'));
+            }else{
+                console.log('cookies已过期');
+            }
         }catch (e){
             console.log(e);
         }
@@ -46,7 +52,8 @@ app.use(function (req,res,next) {
                 var json = JSON.parse(result);
                 var date = new Date();
                 var expireSeconds = json.expires_in;
-                date.setTime(date.getTime()+expireSeconds*1000);
+                // date.setTime(date.getTime()+expireSeconds*1000);
+                date.setTime(date.getTime()+10*1000);
                 // 设置cookies保存access_token及过期时间
                 req.cookies.set('client_credential',JSON.stringify({
                     access_token : json.access_token,
