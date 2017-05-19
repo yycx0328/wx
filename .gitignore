@@ -20,5 +20,6 @@
 
 .idea/
 db/
+wx.js
 # node_modules/
 

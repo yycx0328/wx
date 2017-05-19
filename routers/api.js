@@ -4,7 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var jsSHA = require('jssha');
-var wxConfig = require('./config/wx');
+var wxConfig = require('../config/wx');
 
 router.get('/',function (req,res,next) {
     // 设置token
