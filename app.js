@@ -43,7 +43,7 @@ app.use(function (req,res,next) {
             response.on("end", function () {
                 console.log(size);
                 var buff = Buffer.concat(datas, size);
-                var result = iconv.decode(buff, "utf8");// 转码； var result = buff.toString();//不需要转编码,直接tostring
+                var result = buff.toString(); // iconv.decode(buff, "utf8");// 转码； var result = buff.toString();//不需要转编码,直接tostring
 
                 var json = JSON.stringify(result);
                 var date = new Date();
