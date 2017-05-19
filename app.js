@@ -31,8 +31,9 @@ app.use(function (req,res,next) {
     }
     if(!req.client_credential){
         console.log('未获取到保存的client_credential');
-        console.log(wxUrl.client_credential_url);
         https.get(wxUrl.client_credential_url, function (response) {
+            console.log('statusCode:', response.statusCode);
+            console.log('headers:', response.headers);
             var datas = [];
             var size = 0;
             response.on('data', function (data) {
@@ -40,6 +41,7 @@ app.use(function (req,res,next) {
                 size += data.length;
             });
             response.on("end", function () {
+                console.log(size);
                 var buff = Buffer.concat(datas, size);
                 var result = iconv.decode(buff, "utf8");// 转码； var result = buff.toString();//不需要转编码,直接tostring
 
