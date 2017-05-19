@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({extend:true}));
 app.engine('html',swig.renderFile);
 
 app.use('/',require('./routers/index'));
+app.use('/api',require('./routers/api'));
 app.listen(srv.port,srv.host,function (err) {
     if(err)
         console.log(err);
