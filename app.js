@@ -48,14 +48,14 @@ app.use(function (req,res,next) {
                 var date = new Date();
                 var expireSeconds = result.expires_in;
                 date.setTime(date.getTime()+expireSeconds*1000);
-                console.log(JSON.stringify({
-                    access_token : result.access_token,
-                    expires_date : date
-                }));
+                console.log('date:'+date);
+                console.log('date toGMTString:'+date.toGMTString());
+                console.log('access_token:'+result.access_token);
+                console.log(JSON.stringify({access_token : result.access_token,expires_date : date.toGMTString()}));
                 // 设置cookies保存access_token及过期时间
                 req.cookies.set('client_credential',JSON.stringify({
                     access_token : result.access_token,
-                    expires_date : date
+                    expires_date : date.toGMTString()
                 }));
                 next();
             });
