@@ -44,17 +44,17 @@ app.use(function (req,res,next) {
                 console.log(size);
                 var buff = Buffer.concat(datas, size);
                 var result = buff.toString(); // iconv.decode(buff, "utf8");// 转码； var result = buff.toString();//不需要转编码,直接tostring
-                console.log(result);
+                var json = JSON.parse(result);
                 var date = new Date();
-                var expireSeconds = result.expires_in;
+                var expireSeconds = json.expires_in;
                 date.setTime(date.getTime()+expireSeconds*1000);
                 console.log('date:'+date);
                 console.log('date toGMTString:'+date.toGMTString());
-                console.log('access_token:'+result.access_token);
-                console.log(JSON.stringify({access_token : result.access_token,expires_date : date.toGMTString()}));
+                console.log('access_token:'+json.access_token);
+                console.log(JSON.stringify({access_token : json.access_token,expires_date : date.toGMTString()}));
                 // 设置cookies保存access_token及过期时间
                 req.cookies.set('client_credential',JSON.stringify({
-                    access_token : result.access_token,
+                    access_token : json.access_token,
                     expires_date : date.toGMTString()
                 }));
                 next();
