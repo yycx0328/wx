@@ -32,7 +32,7 @@ app.use(function (req,res,next) {
     if(!req.client_credential){
         console.log('未获取到保存的client_credential');
         console.log(wxUrl.client_credential_url);
-        https.get(wxUrl.client_credential_url, function (request,response) {
+        https.get(wxUrl.client_credential_url, function (response) {
             var datas = [];
             var size = 0;
             response.on('data', function (data) {
