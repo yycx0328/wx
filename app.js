@@ -45,27 +45,26 @@ app.use(function (req,res,next) {
                 var buff = Buffer.concat(datas, size);
                 var result = buff.toString(); // iconv.decode(buff, "utf8");// 转码； var result = buff.toString();//不需要转编码,直接tostring
                 console.log(result);
-                var json = JSON.stringify(result);
-                console.log(json);
                 var date = new Date();
-                var expireSeconds = json.expires_in;
+                var expireSeconds = result.expires_in;
                 date.setTime(date.getTime()+expireSeconds*1000);
                 console.log(JSON.stringify({
-                    access_token : json.access_token,
+                    access_token : result.access_token,
                     expires_date : date
                 }));
                 // 设置cookies保存access_token及过期时间
                 req.cookies.set('client_credential',JSON.stringify({
-                    access_token : json.access_token,
+                    access_token : result.access_token,
                     expires_date : date
                 }));
+                next();
             });
         }).on("error", function (err) {
             console.log(err.stack);
             // callback.apply(null);
+            next();
         });
     }
-    next();
 });
 
 app.use('/',require('./routers/index'));
