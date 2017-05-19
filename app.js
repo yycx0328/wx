@@ -23,7 +23,7 @@ app.engine('html',swig.renderFile);
 app.use(function (req,res,next) {
     req.cookies = new Cookies(req,res);
     if(req.cookies.get('client_credential')){
-        console.log('从cookies中获取client_credential');
+        console.log('获取cookies client_credential');
         try{
             var jsonCookies = JSON.parse(req.cookies.get('client_credential'));
             var expires_date = new Date(jsonCookies.expires_date);
@@ -32,7 +32,7 @@ app.use(function (req,res,next) {
                 req.client_credential = jsonCookies;
                 next();
             }else{
-                console.log('cookies已过期');
+                console.log('cookies client_credential已过期');
                 req.client_credential = null;
             }
         }catch (e){
@@ -41,7 +41,7 @@ app.use(function (req,res,next) {
         }
     }
     if(!req.client_credential){
-        console.log('未获取到保存的client_credential');
+        console.log('重新设置cookies client_credential');
         https.get(wxUrl.client_credential_url, function (response) {
             var datas = [];
             var size = 0;
@@ -55,8 +55,7 @@ app.use(function (req,res,next) {
                 var json = JSON.parse(result);
                 var date = new Date();
                 var expireSeconds = json.expires_in;
-                // date.setTime(date.getTime()+expireSeconds*1000);
-                date.setTime(date.getTime()+10*1000);
+                date.setTime(date.getTime()+expireSeconds*1000);
                 // 设置cookies保存access_token及过期时间
                 req.cookies.set('client_credential',JSON.stringify({
                     access_token : json.access_token,
