@@ -3,10 +3,10 @@
  */
 var express = require('express');
 var router = express.Router();
-var jsSHA = require('jssha');
+var crypto = require('crypto');
 var wxConfig = require('../config/wx');
 
-router.get('/',function (req,res,next) {
+router.get('/validate',function (req,res,next) {
     // 设置token
     var token = wxConfig.token;
     // 获取请求参数
@@ -22,17 +22,25 @@ router.get('/',function (req,res,next) {
     oriArray[2] = token;
     oriArray.sort();
     var original = oriArray.join('');
+    console.log(original);
 
     // 进行SH-1加密
-    var shaObj = new jsSHA(original, 'TEXT');
-    var scyptoString=shaObj.getHash('SHA-1', 'HEX');
+    var hashSum = crypto.createHash('sha1');
+    hashSum.update(original);
+    var scyptoString = hashSum.digest('hex');
+
+    console.log("Original str : " + original);
+    console.log("Signature : " + signature);
+
     // 验证签名
     if(signature == scyptoString){
         // 验证成功
-        res.send("验证成功");
+        res.end(echostr);
+        console.log("Confirm and send echo back");
     } else {
         // 验证失败
-        res.send("验证失败");
+        res.end("false");
+        console.log("Failed!");
     }
 });
 
