@@ -2,6 +2,7 @@
  * Created by lyh_o on 2017/5/18.
  */
 var https = require('https');
+var iconv = require("iconv-lite");
 var express = require('express');
 var swig = require('swig');
 var util = require('util');
@@ -31,15 +32,17 @@ app.use(function (req,res,next) {
     if(!req.client_credential){
         console.log('未获取到保存的client_credential');
         console.log(wxUrl.client_credential_url);
-        https.get(wxUrl.client_credential_url,function (request,response) {
-            console.log('111');
-            var result='';
-            req.on('data',function(data){
-                console.log('222');
-                result+=data;
+        https.get(wxUrl.client_credential_url, function (request,response) {
+            var datas = [];
+            var size = 0;
+            response.on('data', function (data) {
+                datas.push(data);
+                size += data.length;
             });
-            req.on('end',function(){
-                console.log(result);
+            response.on("end", function () {
+                var buff = Buffer.concat(datas, size);
+                var result = iconv.decode(buff, "utf8");// 转码； var result = buff.toString();//不需要转编码,直接tostring
+
                 var json = JSON.stringify(result);
                 var date = new Date();
                 var expireSeconds = json.expires_in;
@@ -51,6 +54,9 @@ app.use(function (req,res,next) {
                     expires_date : date
                 }));
             });
+        }).on("error", function (err) {
+            console.log(err.stack);
+            // callback.apply(null);
         });
     }
     next();
