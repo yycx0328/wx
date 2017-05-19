@@ -25,18 +25,20 @@ app.use(function (req,res,next) {
     if(req.cookies.get('client_credential')){
         console.log('从cookies中获取client_credential');
         try{
-            var json = JSON.parse(req.cookies.get('client_credential'));
-            var expires_date = new Date(json.expires_date);
+            var jsonCookies = JSON.parse(req.cookies.get('client_credential'));
+            var expires_date = new Date(jsonCookies.expires_date);
             var current = new Date();
             if(expires_date.getTime()>current.getTime()) {
-                req.client_credential = json;
+                req.client_credential = jsonCookies;
+                next();
             }else{
                 console.log('cookies已过期');
+                req.client_credential = null;
             }
         }catch (e){
             console.log(e);
+            next();
         }
-        next();
     }
     if(!req.client_credential){
         console.log('未获取到保存的client_credential');
