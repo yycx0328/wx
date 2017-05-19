@@ -26,9 +26,10 @@ app.use(function (req,res,next) {
         console.log('从cookies中获取client_credential');
         try{
             var json = JSON.parse(req.cookies.get('client_credential'));
+            var expires_date = new Date(json.expires_date);
             var current = new Date();
-            if(json.expires_date.getTime()>current.getTime()) {
-                req.client_credential = JSON.parse(req.cookies.get('client_credential'));
+            if(expires_date.getTime()>current.getTime()) {
+                req.client_credential = json;
             }else{
                 console.log('cookies已过期');
             }
