@@ -28,6 +28,7 @@ app.use(function (req,res,next) {
         }catch (e){
             console.log(e);
         }
+        next();
     }
     if(!req.client_credential){
         console.log('未获取到保存的client_credential');
