@@ -73,7 +73,7 @@ app.use(function (req,res,next) {
 
 app.use('/',require('./routers/index'));
 app.use('/api',require('./routers/api'));
-app.use('/wechat',require('./routers/get_message'));
+app.use('/wechat',require('./routers/wx_msg_session').get_message);
 app.listen(srv.port,srv.host,function (err) {
     if(err)
         console.log(err);
