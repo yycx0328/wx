@@ -8,5 +8,5 @@ var wxConfig = require('../config/wx');
 
 exports.get_message = wechat(wxConfig,wechat.text(function (message,req,res,next) {
     console(message);
-    res.replay('');
-}));ok
+    res.replay('ok');
+}));
